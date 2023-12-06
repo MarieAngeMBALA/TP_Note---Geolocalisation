@@ -84,3 +84,50 @@ exports.login = async (req, res) => {
   }
 };
 
+// Sauvegarder une recherche pour l'utilisateur
+exports.saveSearch = async (req, res) => {
+  try {
+    const { code_postal, dpe, ges } = req.params;
+
+    // Récupérer l'utilisateur à partir de la session ou du token d'authentification
+    const user = req.user;
+
+    // Créer une nouvelle recherche
+    const newSearch = new mam_searches({
+      code_postal,
+      dpe,
+      ges,
+      // Ajoutez d'autres champs spécifiques à votre recherche si nécessaire
+    });
+
+    // Sauvegarder la nouvelle recherche dans la base de données
+    await newSearch.save();
+
+    // Ajouter la référence de la recherche aux recherches sauvegardées de l'utilisateur
+    user.searches.push(newSearch._id);
+
+    // Sauvegarder les modifications dans la base de données
+    await user.save();
+
+    res.status(200).json({ message: 'Recherche sauvegardée avec succès.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la sauvegarde de la recherche.' });
+  }
+};
+
+
+// Récupérer les recherches sauvegardées de l'utilisateur
+exports.getSavedSearches = async (req, res) => {
+  try {
+    // Récupérer l'utilisateur à partir de la session ou du token d'authentification
+    const user = req.user;
+
+    // Renvoyer les recherches sauvegardées de l'utilisateur
+    res.status(200).json(user.savedSearches);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des recherches sauvegardées.' });
+  }
+};
+
