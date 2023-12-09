@@ -38,3 +38,6 @@ Pour supprimer une recherche, il faut mettre l'id de la recherche et l'id du res
 voici un exemple
 http://www.localhost:4000/api/V1/search/657051cafcb79f937764ab13/result/657051cafcb79f937764ab14
 
+## Relancer un resultat de rcherche
+
+J'ai écrit le code pour le faire mais je ne l'ai pas testé
